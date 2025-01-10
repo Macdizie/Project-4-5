@@ -1,0 +1,30 @@
+import math  # Import the math module to use mathematical constants and functions
+
+def main():
+    # Prompt the user to enter the radius
+    radius = float(input("Enter the radius: "))
+
+    # Formulas:
+    # - Circumference of a circle: C = 2πr
+    # - Area of a circle: A = πr^2
+    # - Volume of a sphere: V = 4/3 πr^3
+
+    # Calculate the circumference of the circle
+    circle_circumference = 2 * math.pi * radius
+    # Calculate the area of the circle
+    circle_area = math.pi * radius ** 2
+    # Calculate the volume of the sphere
+    sphere_volume = (4/3) * math.pi * radius ** 3
+
+    # Display the results with formatted output:
+    # - {radius:.3f} formats the radius to 3 decimal places
+    # - {circle_circumference:.4f} formats the circumference to 4 decimal places
+    # - {circle_area:.4f} formats the area to 4 decimal places
+    # - {sphere_volume:.4f} formats the volume to 4 decimal places
+    print(f"\nThe circumference of a circle with a radius of {radius:.3f} is {circle_circumference:.4f}")
+    print(f"The area of a circle with a radius of {radius:.3f} is {circle_area:.4f}")
+    print(f"The volume of a sphere with a radius of {radius:.3f} is {sphere_volume:.4f}")
+
+# Run the program if this file is executed directly
+if __name__ == "__main__":
+    main()
