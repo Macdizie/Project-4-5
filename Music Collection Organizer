@@ -1,0 +1,80 @@
+# Music Collection Organizer
+
+# An empty music collection dictionary
+music_collection = {}
+
+# Task to format text to make sure to capitalize the first letter of each word
+def format_text(text):
+    return ' '.join(word.capitalize() for word in text.split())
+
+# 1. Add a song: Prompt the user to enter the song title and artist, and add it to the music collection.
+def add_song():
+    song_title = format_text(input("Please enter the song title: "))
+    artist = format_text(input("Please enter the name of the artist: "))
+    music_collection[song_title] = artist
+    print(f"'{song_title}' by {artist} has been added to the music collection.")
+
+# 2. Retrieve song details: Prompt the user to enter a song title, and display the corresponding artist from the music collection.
+def retrieve_song_details():
+    song_title = format_text(input("Please enter the song title to retrieve the name of the artist: "))
+    artist = music_collection.get(song_title)
+    if artist:
+        print(f"The name of the artist for '{song_title}' is {artist}.")
+    else:
+        print(f"'{song_title}' not found in the music collection.")
+
+# 3. Update song details: Prompt the user to enter a song title, and update the artist information in the music collection.
+def update_song_details():
+    song_title = format_text(input("Please enter the song title to update the name of the artist: "))
+    artist = format_text(input("Please enter the new artist: "))
+    if song_title in music_collection:
+        music_collection[song_title] = artist
+        print(f"The name of the artist for '{song_title}' has been updated to {artist}.")
+    else:
+        print(f"'{song_title}' not found in the music collection.")
+
+# 4. Delete a song: Prompt the user to enter a song title, and remove the corresponding song from the music collection.
+def delete_song():
+    song_title = format_text(input("Please enter the song title to delete: "))
+    if song_title in music_collection:
+        del music_collection[song_title]
+        print(f"'{song_title}' has been deleted from the music collection.")
+    else:
+        print(f"'{song_title}' not found in the music collection.")
+
+# 5. Display all songs: Display all songs in the music collection.
+def display_all_songs():
+    if music_collection:
+        print("Music Collection:")
+        for song, artist in music_collection.items():
+            print(f"'{song}' by {artist}")
+    else:
+        print("The music collection is empty, please add a song.")
+
+# Main program loop for user interaction
+while True:
+    print("\nOptions:")
+    print("1. Add a song")
+    print("2. Retrieve song details")
+    print("3. Update song details")
+    print("4. Delete a song")
+    print("5. Display all songs")
+    print("6. Exit")
+
+    # Prompting user for selection
+    choice = input("Please make your selection: ")
+
+    if choice == '1':
+        add_song()
+    elif choice == '2':
+        retrieve_song_details()
+    elif choice == '3':
+        update_song_details()
+    elif choice == '4':
+        delete_song()
+    elif choice == '5':
+        display_all_songs()
+    elif choice == '6':
+        break
+    else:
+        print("That was an invalid selection. Please select from one of our valid options.")
