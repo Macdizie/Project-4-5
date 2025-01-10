@@ -1,0 +1,46 @@
+# Objective: Develop a Python program that analyzes a given sentence to provide some insights about it.
+
+def analyze_sentence(sentence):
+    """
+    Analyze a sentence and print various statistics.
+
+    Parameters:
+    - sentence (str): The input sentence to analyze.
+    """
+    # Split the sentence into words
+    words = sentence.split()
+
+    # 2. Count and display the number of words in the sentence.
+    number_words = len(words)
+
+    # Define a set of vowels case-insensitive
+    vowels = "aeiou"
+
+    # 3. Count and display the number of vowels in the sentence.
+    number_vowels = sum(1 for char in sentence.lower() if char in vowels)
+
+    # 4. Create a list of unique words in the sentence and display them.
+    unique_words = list(set(words))
+
+    # 5. Display the word(s) with the maximum length from the sentence.
+    max_length = max(len(word) for word in words)
+    max_length_words = [word for word in words if len(word) == max_length]
+
+    # Print the analysis results
+    print("Sentence Analysis:")
+    print("Sentence:", sentence)
+    print("Number of Words:", number_words)
+    print("Number of Vowels:", number_vowels)
+    print("Unique Words:", unique_words)
+    print("Word(s) with Maximum Length:", max_length_words)
+
+if __name__ == "__main__":
+    # 1. Ask the user to provide a sentence with at least 10 words.
+    while True:  # Creating a loop in case the user does not input 10 words
+        input_sentence = input("Please enter a sentence with at least 10 words: ")
+        words_in_sentence = input_sentence.split()
+        if len(words_in_sentence) >= 10:
+            analyze_sentence(input_sentence)
+            break
+        else:
+            print("Sorry, your sentence was less than 10 words. Please try again.")
