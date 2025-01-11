@@ -1,0 +1,159 @@
+/* 
+Insert or update data into the User table 
+*/
+INSERT INTO `User` (FirstName, LastName, Email, Phone, DateOfBirth, Address) VALUES
+    -- Insert a new user record for Zack Morris
+    ('Zack', 'Morris', 'zack.morris1@example.com', '123-456-7890', '1974-07-25', '16 Bayside High St'),
+    -- Insert a new user record for Kelly Kapowski
+    ('Kelly', 'Kapowski', 'kelly.kapowski1@example.com', '098-765-4321', '1974-10-02', '17 Bayside High St'),
+    -- Insert a new user record for A.C. Slater
+    ('A.C.', 'Slater', 'ac.slater1@example.com', '111-222-3333', '1974-08-14', '18 Bayside High St'),
+    -- Insert a new user record for Jessie Spano
+    ('Jessie', 'Spano', 'jessie.spano1@example.com', '222-333-4444', '1974-07-20', '19 Bayside High St'),
+    -- Insert a new user record for Lisa Turtle
+    ('Lisa', 'Turtle', 'lisa.turtle1@example.com', '333-444-5555', '1974-07-24', '20 Bayside High St'),
+    -- Insert a new user record for Samuel Powers
+    ('Samuel', 'Powers', 'sam.powers1@example.com', '444-555-6666', '1974-07-22', '21 Bayside High St')
+AS new
+ON DUPLICATE KEY UPDATE 
+    -- If a duplicate key is found, update the existing record with new values
+    FirstName = new.FirstName,
+    LastName = new.LastName,
+    Email = new.Email,
+    Phone = new.Phone,
+    DateOfBirth = new.DateOfBirth,
+    Address = new.Address;
+
+/* 
+Insert or update data into the Role table 
+*/
+INSERT INTO Role (RoleName) VALUES
+    -- Insert a new role for Administrator
+    ('Administrator'),
+    -- Insert a new role for Trainer
+    ('Trainer'),
+    -- Insert a new role for Marketing
+    ('Marketing'),
+    -- Insert a new role for Sales
+    ('Sales')
+AS new
+ON DUPLICATE KEY UPDATE 
+    -- If a duplicate key is found, update the existing record with new values
+    RoleName = new.RoleName;
+
+/* 
+Insert or update data into the UserRole table 
+*/
+INSERT INTO UserRole (UserID, RoleID) VALUES
+    -- Assign Administrator role to user with ID 1
+    (1, 1),
+    -- Assign Trainer role to user with ID 2
+    (2, 2),
+    -- Assign Marketing role to user with ID 3
+    (3, 3),
+    -- Assign Sales role to user with ID 4
+    (4, 4),
+    -- Assign Trainer role to user with ID 5
+    (5, 2),
+    -- Assign Marketing role to user with ID 6
+    (6, 3)
+AS new
+ON DUPLICATE KEY UPDATE 
+    -- If a duplicate key is found, update the existing record with new values
+    UserID = new.UserID,
+    RoleID = new.RoleID;
+
+/* 
+Insert or update data into the Customer table 
+*/
+INSERT INTO Customer (FirstName, LastName, Email, Phone, Address) VALUES
+    -- Insert a new customer record for Richard Belding
+    ('Richard', 'Belding', 'richard.belding@example.com', '555-666-7777', '22 Bayside High St'),
+    -- Insert a new customer record for Tori Scott
+    ('Tori', 'Scott', 'tori.scott@example.com', '666-777-8888', '23 Bayside High St')
+AS new
+ON DUPLICATE KEY UPDATE 
+    -- If a duplicate key is found, update the existing record with new values
+    FirstName = new.FirstName,
+    LastName = new.LastName,
+    Email = new.Email,
+    Phone = new.Phone,
+    Address = new.Address;
+
+/* 
+Insert or update data into the Product table 
+*/
+INSERT INTO Product (ProductName, Category, Price) VALUES
+    -- Insert a new product record for Product A in Category 1 with a price of 9.99
+    ('Product A', 'Category 1', 9.99),
+    -- Insert a new product record for Product B in Category 2 with a price of 19.99
+    ('Product B', 'Category 2', 19.99)
+AS new
+ON DUPLICATE KEY UPDATE 
+    -- If a duplicate key is found, update the existing record with new values
+    ProductName = new.ProductName,
+    Category = new.Category,
+    Price = new.Price;
+
+/* 
+Insert or update data into the Order table 
+*/
+INSERT INTO `Order` (CustomerID, OrderDate, TotalAmount) VALUES
+    -- Insert a new order record for customer with ID 1 on 2023-01-01 with a total amount of 29.98
+    (1, '2023-01-01', 29.98),
+    -- Insert a new order record for customer with ID 2 on 2023-02-02 with a total amount of 9.99
+    (2, '2023-02-02', 9.99)
+AS new
+ON DUPLICATE KEY UPDATE 
+    -- If a duplicate key is found, update the existing record with new values
+    CustomerID = new.CustomerID,
+    OrderDate = new.OrderDate,
+    TotalAmount = new.TotalAmount;
+
+/* 
+Insert or update data into the OrderDetails table 
+*/
+INSERT INTO OrderDetails (OrderID, ProductID, Quantity, TotalPrice) VALUES
+    -- Insert a new order detail record for order with ID 1 and product with ID 1 with a quantity of 1 and total price of 9.99
+    (1, 1, 1, 9.99),
+    -- Insert a new order detail record for order with ID 1 and product with ID 2 with a quantity of 1 and total price of 19.99
+    (1, 2, 1, 19.99),
+    -- Insert a new order detail record for order with ID 2 and product with ID 1 with a quantity of 1 and total price of 9.99
+    (2, 1, 1, 9.99)
+AS new
+ON DUPLICATE KEY UPDATE 
+    -- If a duplicate key is found, update the existing record with new values
+    OrderID = new.OrderID,
+    ProductID = new.ProductID,
+    Quantity = new.Quantity,
+    TotalPrice = new.TotalPrice;
+
+/* 
+Insert or update data into the Supplier table 
+*/
+INSERT INTO Supplier (SupplierName, ContactName, Phone, Address) VALUES
+    -- Insert a new supplier record for Supplier 1 with contact name Contact 1 and phone number 123-123-1234
+    ('Supplier 1', 'Contact 1', '123-123-1234', '123 Supplier St'),
+    -- Insert a new supplier record for Supplier 2 with contact name Contact 2 and phone number 234-234-2345
+    ('Supplier 2', 'Contact 2', '234-234-2345', '234 Supplier St')
+AS new
+ON DUPLICATE KEY UPDATE 
+    -- If a duplicate key is found, update the existing record with new values
+    SupplierName = new.SupplierName,
+    ContactName = new.ContactName,
+    Phone = new.Phone,
+    Address = new.Address;
+
+/* 
+Insert or update data into the Inventory table 
+*/
+INSERT INTO Inventory (ProductID, QuantityInStock) VALUES
+    -- Insert a new inventory record for product with ID 1 with a quantity in stock of 100
+    (1, 100),
+    -- Insert a new inventory record for product with ID 2 with a quantity in stock of 200
+    (2, 200)
+AS new
+ON DUPLICATE KEY UPDATE 
+    -- If a duplicate key is found, update the existing record with new values
+    ProductID = new.ProductID,
+    QuantityInStock = new.QuantityInStock;
