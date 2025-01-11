@@ -1,0 +1,59 @@
+# Creating a Personnel to display name, age and hourly rate
+class Personnel:
+    def __init__(self, name, age, hourlyRate):
+        self.name = name
+        self.age = age
+        self.hourlyRate = hourlyRate
+# Creating attributes to be displayed when each person's information pulls up
+    def display(self):
+        print(f"Name: {self.name}")
+        print(f"Age: {self.age}")
+        print(f"Hourly Rate: {self.hourlyRate}")
+
+# Creating a child class Doctor which inherit from the Persoonel class. The Doctor Class has a specialty attribute
+class Doctor(Personnel):
+    def __init__(self, name, age, hourlyRate, specialty):
+        super().__init__(name, age, hourlyRate)
+        self.specialty = specialty
+
+    def displayDoctor(self):
+        # Display doctor-specific information.
+        self.display()
+        print(f"Specialty: {self.specialty}")
+
+# Creating a child class Surgeon which inherit from the Personnel class. The Surgeon Class has a board certified attribute
+class Surgeon(Personnel):
+    def __init__(self, name, age, hourlyRate, boardCertified):
+        super().__init__(name, age, hourlyRate)
+        self.boardCertified = boardCertified
+
+    def displaySurgeon(self):
+        # Display surgeon-specific information.
+        self.display()
+        print(f"Board Certified: {'Yes' if self.boardCertified else 'No'}")
+
+# Creating a child class Nurse which inherit from the Personnel class. The Nurse Class has a rank attribute
+class Nurse(Personnel):
+    def __init__(self, name, age, hourlyRate, rank):
+        super().__init__(name, age, hourlyRate)
+        self.rank = rank
+
+    def displayNurse(self):
+        # Display nurse-specific information.
+        self.display()
+        print(f"Rank: {self.rank}")
+
+
+# Creating and evaluating the display methods for objects.
+doctor = Doctor("Dr. Cosmo Kramer ", 38, 395, "Proctologist")
+surgeon = Surgeon("Dr. Cassandra Roberts", 32, 426, True)
+nurse = Nurse("Nurse Vericona Patel", 43, 142, "Chief Nursing Officer")
+
+print("Doctor Information:")
+doctor.displayDoctor()
+
+print("\nSurgeon Information:")
+surgeon.displaySurgeon()
+
+print("\nNurse Information:")
+nurse.displayNurse()
