@@ -1,0 +1,61 @@
+def calculate_area_of_rectangle(length, width):
+    """
+    Calculate the area of a rectangle.
+
+    This function takes the length and width of a rectangle as parameters
+    and returns the area of the rectangle.
+
+    Parameters:
+    length (float or int): The length of the rectangle.
+    width (float or int): The width of the rectangle.
+
+    Returns:
+    float or int: The calculated area of the rectangle.
+
+    Example:
+    >>> calculate_area_of_rectangle(5, 3)
+    15
+    >>> calculate_area_of_rectangle(10, 7)
+    70
+    >>> calculate_area_of_rectangle(4.5, 2)
+    9.0
+    >>> calculate_area_of_rectangle(0, 8)
+    0
+    >>> calculate_area_of_rectangle(-3, 6)
+    Traceback (most recent call last):
+        ...
+    ValueError: Length and width must be positive numbers.
+    """
+
+    # Check if either the length or width is non-positive, and raise a ValueError in that case.
+    if length <= 0 or width <= 0:
+        raise ValueError("Length and width must be positive numbers.")
+
+    # Calculate the area by multiplying the length and width and return it.
+    return length * width
+
+# Unit Test using unittest
+import unittest
+
+class TestCalculateAreaOfRectangle(unittest.TestCase):
+
+    def test_positive_values(self):
+        # Test with positive values for length and width.
+        self.assertEqual(calculate_area_of_rectangle(5, 3), 15)
+        self.assertEqual(calculate_area_of_rectangle(10, 7), 70)
+        self.assertEqual(calculate_area_of_rectangle(4.5, 2), 9.0)
+
+    def test_zero_values(self):
+        # Test with one or both of length and width being zero.
+        self.assertEqual(calculate_area_of_rectangle(0, 8), 0)
+        self.assertEqual(calculate_area_of_rectangle(6, 0), 0)
+
+    def test_negative_values(self):
+        # Test with negative values for length and width, expecting a ValueError.
+        with self.assertRaises(ValueError):
+            calculate_area_of_rectangle(-3, 6)
+        with self.assertRaises(ValueError):
+            calculate_area_of_rectangle(5, -2)
+
+if __name__ == "__main__":
+    unittest.main()
