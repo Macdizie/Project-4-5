@@ -1,0 +1,114 @@
+/* 
+Drop the database if it exists 
+This ensures a clean start by removing the existing database
+*/
+DROP DATABASE IF EXISTS CRM_System;
+
+/* 
+Create Database 
+If the database CRM_System does not exist, create it
+*/
+CREATE DATABASE IF NOT EXISTS CRM_System;
+USE CRM_System;
+
+/* 
+Drop existing tables if they exist 
+This ensures that old tables are removed before creating new ones
+*/
+-- We will ignore the warnings and proceed
+SET SESSION sql_notes = 0;
+
+DROP TABLE IF EXISTS UserRole;  /* Drop UserRole table if it exists */
+DROP TABLE IF EXISTS Role;  /* Drop Role table if it exists */
+DROP TABLE IF EXISTS `User`;  /* Drop User table if it exists */
+DROP TABLE IF EXISTS OrderDetails;  /* Drop OrderDetails table if it exists */
+DROP TABLE IF EXISTS `Order`;  /* Drop Order table if it exists */
+DROP TABLE IF EXISTS Product;  /* Drop Product table if it exists */
+DROP TABLE IF EXISTS Customer;  /* Drop Customer table if it exists */
+
+SET SESSION sql_notes = 1;
+
+/* 
+Create User Table 
+This table stores user information
+*/
+CREATE TABLE `User` (
+    UserID INT AUTO_INCREMENT PRIMARY KEY, /* Unique identifier for each user */
+    FirstName VARCHAR(50) NOT NULL, /* User's first name */
+    LastName VARCHAR(50) NOT NULL, /* User's last name */
+    Email VARCHAR(100) UNIQUE NOT NULL, /* User's email, must be unique */
+    Phone VARCHAR(20), /* User's phone number */
+    DateOfBirth DATE, /* User's date of birth */
+    Address VARCHAR(255) /* User's address */
+);
+
+/* 
+Create Role Table 
+This table stores different roles that users can have
+*/
+CREATE TABLE Role (
+    RoleID INT AUTO_INCREMENT PRIMARY KEY, /* Unique identifier for each role */
+    RoleName VARCHAR(50) NOT NULL /* Name of the role */
+);
+
+/* 
+Create UserRole Table 
+This table links users to their roles
+*/
+CREATE TABLE UserRole (
+    UserID INT, /* User identifier */
+    RoleID INT, /* Role identifier */
+    PRIMARY KEY (UserID, RoleID), /* Composite primary key consisting of UserID and RoleID */
+    FOREIGN KEY (UserID) REFERENCES `User`(UserID), /* Foreign key linking to User table */
+    FOREIGN KEY (RoleID) REFERENCES Role(RoleID) /* Foreign key linking to Role table */
+);
+
+/* 
+Create Customer Table 
+This table stores customer information
+*/
+CREATE TABLE Customer (
+    CustomerID INT AUTO_INCREMENT PRIMARY KEY, /* Unique identifier for each customer */
+    FirstName VARCHAR(50) NOT NULL, /* Customer's first name */
+    LastName VARCHAR(50) NOT NULL, /* Customer's last name */
+    Email VARCHAR(100) UNIQUE NOT NULL, /* Customer's email, must be unique */
+    Phone VARCHAR(20), /* Customer's phone number */
+    Address VARCHAR(255) /* Customer's address */
+);
+
+/* 
+Create Product Table 
+This table stores product information
+*/
+CREATE TABLE Product (
+    ProductID INT AUTO_INCREMENT PRIMARY KEY, /* Unique identifier for each product */
+    ProductName VARCHAR(100) NOT NULL, /* Name of the product */
+    Category VARCHAR(50), /* Product category */
+    Price DECIMAL(10, 2) NOT NULL /* Product price */
+);
+
+/* 
+Create Order Table 
+This table stores order information
+*/
+CREATE TABLE `Order` (
+    OrderID INT AUTO_INCREMENT PRIMARY KEY, /* Unique identifier for each order */
+    CustomerID INT, /* Customer identifier */
+    OrderDate DATE NOT NULL, /* Date of the order */
+    TotalAmount DECIMAL(10, 2) NOT NULL, /* Total amount of the order */
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID) /* Foreign key linking to Customer table */
+);
+
+/* 
+Create OrderDetails Table 
+This table stores details of each order
+*/
+CREATE TABLE OrderDetails (
+    OrderID INT, /* Order identifier */
+    ProductID INT, /* Product identifier */
+    Quantity INT NOT NULL, /* Quantity of the product */
+    Price DECIMAL(10, 2) NOT NULL, /* Price of the product */
+    PRIMARY KEY (OrderID, ProductID), /* Composite primary key consisting of OrderID and ProductID */
+    FOREIGN KEY (OrderID) REFERENCES `Order`(OrderID), /* Foreign key linking to Order table */
+    FOREIGN KEY (ProductID) REFERENCES Product(ProductID) /* Foreign key linking to Product table */
+);
