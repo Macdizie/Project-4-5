@@ -1,111 +1,165 @@
-# Beginner-friendly Bank Account Management System
+import logging
+
+# Set up logging to record transactions and warnings
+logging.basicConfig(filename='banking.log', level=logging.INFO)
 
 # Define a class for individual bank accounts
 class BankAccount:
     def __init__(self, account_number, initial_balance):
-        # Initialize the account with a number and a starting balance
         self.account_number = account_number
         self.balance = initial_balance
 
     def deposit(self, amount):
-        # Add money to the account
+        # Increase the account balance by the deposit amount
         self.balance += amount
 
     def withdraw(self, amount):
-        # Subtract money from the account if enough balance exists
         if amount <= self.balance:
+            # Deduct the withdrawal amount from the balance if sufficient funds are available
             self.balance -= amount
         else:
-            print("Insufficient funds!")
+            # Log a warning if the withdrawal would result in a negative balance
+            logging.warning(f"Insufficient balance for account {self.account_number}")
 
     def check_balance(self):
-        # Show the current account balance
-        print(f"Account {self.account_number} balance: ${self.balance:.2f}")
+        # Return the current balance of the account
+        return self.balance
 
+    def display_account_details(self):
+        # Display the account number and balance
+        print(f"Account Number: {self.account_number}")
+        print(f"Balance: ${self.balance:.2f}")
 
-# Define a class to manage the bank
+# Define a class for the Bank, which manages multiple accounts
 class Bank:
     def __init__(self):
-        # Store all accounts in a dictionary
-        self.accounts = {}
-        self.next_account_number = 1  # Start account numbers from 1
+        self.accounts = {}  # Dictionary to store accounts
+        self.account_number_counter = 1  # Initialize account number counter
 
     def create_account(self):
-        # Create a new account with a user-provided initial balance
-        initial_balance = float(input("Enter initial balance for the account: $"))
-        if initial_balance < 0:
-            print("Initial balance cannot be negative.")
+        try:
+            initial_balance = float(input("Enter initial balance: $"))
+            if initial_balance < 0:
+                print("Initial balance must be non-negative.")
+                return
+        except ValueError:
+            print("Invalid input. Initial balance must be a number.")
             return
-        account = BankAccount(self.next_account_number, initial_balance)
-        self.accounts[self.next_account_number] = account
-        print(f"Account created successfully! Your account number is {self.next_account_number}")
-        self.next_account_number += 1
 
-    def deposit(self):
-        # Add money to an account
-        account_number = int(input("Enter account number: "))
-        account = self.accounts.get(account_number)
-        if account:
-            amount = float(input("Enter amount to deposit: $"))
-            if amount < 0:
-                print("Deposit amount must be positive.")
+        # Create a new BankAccount instance and store it in the dictionary
+        account = BankAccount(self.account_number_counter, initial_balance)
+        self.accounts[self.account_number_counter] = account
+        print(f"Account created with account number: {self.account_number_counter}")
+        self.account_number_counter += 1  # Increment the account number counter
+
+    def get_account(self, account_number):
+        # Retrieve a BankAccount instance by its account number
+        return self.accounts.get(account_number, None)
+
+    def deposit(self, account_number, amount):
+        account = self.get_account(account_number)
+        if account is not None:
+            try:
+                amount = float(amount)
+                if amount < 0:
+                    print("Deposit amount must be non-negative.")
+                else:
+                    # Call the deposit method of the BankAccount instance
+                    account.deposit(amount)
+                    print(f"Deposited ${amount:.2f} into account {account_number}")
+            except ValueError:
+                print("Invalid input. Deposit amount must be a number.")
+        else:
+            print("Account not found")
+
+    def withdraw(self, account_number, amount):
+        account = self.get_account(account_number)
+        if account is not None:
+            try:
+                amount = float(amount)
+                if amount < 0:
+                    print("Withdrawal amount must be non-negative.")
+                else:
+                    # Call the withdraw method of the BankAccount instance
+                    account.withdraw(amount)
+                    print(f"Withdrew ${amount:.2f} from account {account_number}")
+            except ValueError:
+                print("Invalid input. Withdrawal amount must be a number.")
+        else:
+            print("Account not found")
+
+    def transfer(self, from_account_number, to_account_number, amount):
+        from_account = self.get_account(from_account_number)
+        to_account = self.get_account(to_account_number)
+
+        if from_account and to_account:
+            try:
+                amount = float(amount)
+                if amount < 0:
+                    print("Transfer amount must be non-negative.")
+                    return
+            except ValueError:
+                print("Invalid input. Transfer amount must be a number.")
                 return
-            account.deposit(amount)
-            print(f"${amount:.2f} deposited successfully.")
-        else:
-            print("Account not found.")
 
-    def withdraw(self):
-        # Withdraw money from an account
+            if from_account.balance >= amount:
+                # Perform a transfer between two accounts
+                from_account.withdraw(amount)
+                to_account.deposit(amount)
+                print(f"Transferred ${amount:.2f} from account {from_account_number} to account {to_account_number}")
+            else:
+                print("Insufficient balance in the source account")
+        else:
+            print("Account not found")
+
+def execute_choice(bank, choice):
+    if choice == 1:
+        bank.create_account()
+    elif choice == 2:
         account_number = int(input("Enter account number: "))
-        account = self.accounts.get(account_number)
-        if account:
-            amount = float(input("Enter amount to withdraw: $"))
-            if amount < 0:
-                print("Withdrawal amount must be positive.")
-                return
-            account.withdraw(amount)
-            print("Withdrawal processed.")
-        else:
-            print("Account not found.")
-
-    def check_balance(self):
-        # Display the balance of an account
+        amount = float(input("Enter amount to deposit: $"))
+        bank.deposit(account_number, amount)
+    elif choice == 3:
         account_number = int(input("Enter account number: "))
-        account = self.accounts.get(account_number)
+        amount = float(input("Enter amount to withdraw: $"))
+        bank.withdraw(account_number, amount)
+    elif choice == 4:
+        account_number = int(input("Enter account number: "))
+        account = bank.get_account(account_number)
         if account:
-            account.check_balance()
+            # Display the account balance
+            print(f"Balance: ${account.check_balance():.2f}")
         else:
             print("Account not found.")
+    elif choice == 5:
+        from_account_number = int(input("Enter account number to transfer from: "))
+        to_account_number = int(input("Enter account number to transfer to: "))
+        amount = float(input("Enter amount to transfer: $"))
+        # Initiate a transfer between accounts
+        bank.transfer(from_account_number, to_account_number, amount)
+    elif choice == 6:
+        # Exit the program
+        exit()
 
+def execute_choice_recursive(bank):
+    print("Bank Account Management System:")
+    print("1. Create Account")
+    print("2. Deposit")
+    print("3. Withdraw")
+    print("4. Check Balance")
+    print("5. Transfer")
+    print("6. Quit")
 
-# Main menu to interact with the bank system
-def main_menu(bank):
-    while True:
-        print("\nWelcome to the Bank!")
-        print("1. Create Account")
-        print("2. Deposit")
-        print("3. Withdraw")
-        print("4. Check Balance")
-        print("5. Exit")
+    choice = int(input("Enter your choice: "))
+    if choice == 6:
+        return
+    execute_choice(bank, choice)
+    execute_choice_recursive(bank)
 
-        choice = input("Enter your choice (1-5): ")
-        if choice == "1":
-            bank.create_account()
-        elif choice == "2":
-            bank.deposit()
-        elif choice == "3":
-            bank.withdraw()
-        elif choice == "4":
-            bank.check_balance()
-        elif choice == "5":
-            print("Thank you for using the bank. Goodbye!")
-            break
-        else:
-            print("Invalid choice. Please try again.")
+def main():
+    # Create a bank instance
+    my_bank = Bank()
+    execute_choice_recursive(my_bank)
 
-
-# Main program execution starts here
 if __name__ == "__main__":
-    my_bank = Bank()  # Create a Bank instance
-    main_menu(my_bank)
+    main()
