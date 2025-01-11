@@ -1,0 +1,69 @@
+/* 
+Insert or replace data into the User table 
+The REPLACE INTO statement will delete the existing row and insert the new row if a duplicate key is found.
+This ensures that the user data remains unique based on the unique key constraint (e.g., Email).
+*/
+REPLACE INTO `User` (FirstName, LastName, Email, Phone, DateOfBirth, Address) VALUES
+('Zack', 'Morris', 'zack.morris1@example.com', '123-456-7890', '1974-07-25', '16 Bayside High St'), -- Adding Zack Morris
+('Kelly', 'Kapowski', 'kelly.kapowski1@example.com', '098-765-4321', '1974-10-02', '17 Bayside High St'), -- Adding Kelly Kapowski
+('A.C.', 'Slater', 'ac.slater1@example.com', '111-222-3333', '1974-08-14', '18 Bayside High St'), -- Adding A.C. Slater
+('Jessie', 'Spano', 'jessie.spano1@example.com', '222-333-4444', '1974-07-20', '19 Bayside High St'), -- Adding Jessie Spano
+('Lisa', 'Turtle', 'lisa.turtle1@example.com', '333-444-5555', '1974-07-24', '20 Bayside High St'), -- Adding Lisa Turtle
+('Samuel', 'Powers', 'sam.powers1@example.com', '444-555-6666', '1974-07-22', '21 Bayside High St'); -- Adding Samuel Powers
+
+/* 
+Insert or replace data into the Role table 
+This table stores the different roles that users can have in the system.
+The REPLACE INTO statement ensures that each role remains unique.
+*/
+REPLACE INTO Role (RoleName) VALUES
+('Administrator'), -- Role for Administrators
+('Trainer'), -- Role for Trainers
+('Marketing'), -- Role for Marketing personnel
+('Sales'); -- Role for Sales personnel
+
+/* 
+Insert or replace data into the UserRole table 
+This table links users to their roles using foreign keys.
+The REPLACE INTO statement ensures that each (UserID, RoleID) pair remains unique.
+*/
+REPLACE INTO UserRole (UserID, RoleID) VALUES
+(1, 1), -- Assigning Zack Morris as Administrator
+(2, 2), -- Assigning Kelly Kapowski as Trainer
+(3, 3), -- Assigning A.C. Slater as Marketing
+(4, 4), -- Assigning Jessie Spano as Sales
+(5, 2), -- Assigning Lisa Turtle as Trainer
+(6, 3); -- Assigning Samuel Powers as Marketing
+
+/* 
+Insert or replace data into the Customer table 
+This table stores customer information, and the REPLACE INTO statement ensures unique entries based on the unique key constraint (e.g., Email).
+*/
+REPLACE INTO Customer (FirstName, LastName, Email, Phone, Address) VALUES
+('Richard', 'Belding', 'richard.belding@example.com', '555-666-7777', '22 Bayside High St'), -- Adding Richard Belding
+('Tori', 'Scott', 'tori.scott@example.com', '666-777-8888', '23 Bayside High St'); -- Adding Tori Scott
+
+/* 
+Insert or replace data into the Product table 
+This table stores product information. The REPLACE INTO statement ensures each product entry is unique.
+*/
+REPLACE INTO Product (ProductName, Category, Price) VALUES
+('Product A', 'Category 1', 9.99), -- Adding Product A
+('Product B', 'Category 2', 19.99); -- Adding Product B
+
+/* 
+Insert or replace data into the Order table 
+This table stores order information, and the REPLACE INTO statement ensures unique entries based on the primary key.
+*/
+REPLACE INTO `Order` (CustomerID, OrderDate, TotalAmount) VALUES
+(1, '2023-01-01', 29.98), -- Adding an order for Richard Belding
+(2, '2023-02-02', 9.99); -- Adding an order for Tori Scott
+
+/* 
+Insert or replace data into the OrderDetails table 
+This table stores details for each order. The REPLACE INTO statement ensures each (OrderID, ProductID) pair is unique.
+*/
+REPLACE INTO OrderDetails (OrderID, ProductID, Quantity, Price) VALUES
+(1, 1, 1, 9.99), -- Adding details for the first order with Product A
+(1, 2, 1, 19.99), -- Adding details for the first order with Product B
+(2, 1, 1, 9.99); -- Adding details for the second order with Product A
