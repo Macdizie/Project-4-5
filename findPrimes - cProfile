@@ -1,0 +1,71 @@
+import random
+import math
+import cProfile
+def is_prime(num):
+"""
+Check if a number is prime.
+Parameters:
+num (int): The number to check for primality.
+Returns:
+bool: True if the number is prime, False otherwise.
+"""
+# Any number less than or equal to 1 is not prime by definition.
+if num <= 1:
+return False
+# Numbers 2 and 3 are prime numbers.
+if num <= 3:
+return True
+# Eliminate numbers divisible by 2 or 3, as they are not prime.
+if num % 2 == 0 or num % 3 == 0:
+return False
+i = 5
+# Only need to check for factors up to the square root of num.
+# Factors repeat after the square root, so this is an optimization.
+while i * i <= num:
+# Check divisibility by current i and i + 2 (skip even numbers).
+if num % i == 0 or num % (i + 2) == 0:
+return False
+# Increment by 6 to skip checking even numbers and multiples of 3.
+i += 6
+# If no factors are found, the number is prime.
+return True
+def generate_primes(max_num):
+"""
+Generate a list of prime numbers up to a specified maximum number.
+Parameters:
+max_num (int): The upper limit up to which prime numbers are generated.
+Returns:
+list: A list of prime numbers up to max_num.
+"""
+# Initialize an empty list to store prime numbers.
+primes = []
+# Iterate over each number from 2 to max_num (inclusive).
+for num in range(2, max_num + 1):
+# Check if the current number is prime.
+if is_prime(num):
+# If it is prime, add it to the list of primes.
+primes.append(num)
+# Return the complete list of prime numbers.
+return primes
+def find_primes(count):"""
+Find a specified count of random prime numbers.
+Parameters:
+count (int): The number of prime numbers to find and return.
+Returns:
+list: A list of randomly selected prime numbers.
+"""
+# Generate a list of prime numbers up to 5000.
+primes = generate_primes(5000)
+# Randomly select 'count' primes from the generated list.
+# random.sample ensures that the selected primes are unique.
+selected_primes = random.sample(primes, count)
+# Return the list of randomly selected prime numbers.
+return selected_primes
+# Set the random seed to ensure that the random selection is reproducible.
+# This is useful for profiling and debugging purposes.
+random.seed(49)
+# Profile the performance of the find_primes function.
+# cProfile.run profiles the execution of the specified command.
+# In this case, it profiles the execution of find_primes(500)[:10],
+# which finds 500 random primes and prints the first 10 of them.
+cProfile.run('print(find_primes(500)[:10])')
