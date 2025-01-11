@@ -1,0 +1,98 @@
+-- Switch to the 'crm_system' database
+USE crm_system;
+
+-- Change the delimiter to double slashes (//) to handle semicolons in functions and procedures
+-- This allows the body of functions and procedures to contain semicolons without terminating the statement
+DELIMITER //
+
+-- Drop the existing function GetCustomerOrders if it exists
+-- This ensures we can create a new function without conflict
+DROP FUNCTION IF EXISTS GetCustomerOrders;
+//
+
+-- Create a function to get the total number of orders placed by a customer
+-- The function takes CustomerID as input and returns an integer
+CREATE FUNCTION GetCustomerOrders (CustomerID INT) RETURNS INT
+-- DETERMINISTIC: The function returns the same result given the same input parameters
+-- READS SQL DATA: The function reads data from the database but does not modify it
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    -- Declare a variable to store the total number of orders
+    DECLARE TotalOrders INT;
+    
+    -- Select the count of orders for the given CustomerID and store it in the TotalOrders variable
+    SELECT COUNT(*) INTO TotalOrders FROM `Order` WHERE `Order`.CustomerID = CustomerID;
+    
+    -- Return the total number of orders
+    RETURN TotalOrders;
+END;
+//
+
+-- Drop the existing function GetTotalSales if it exists
+-- This ensures we can create a new function without conflict
+DROP FUNCTION IF EXISTS GetTotalSales;
+//
+
+-- Create a function to get the total sales amount for a given product
+-- The function takes ProductID as input and returns a decimal value
+CREATE FUNCTION GetTotalSales (ProductID INT) RETURNS DECIMAL(10, 2)
+-- DETERMINISTIC: The function returns the same result given the same input parameters
+-- READS SQL DATA: The function reads data from the database but does not modify it
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    -- Declare a variable to store the total sales amount
+    DECLARE TotalSales DECIMAL(10, 2);
+    
+    -- Select the sum of the total price for all order details where the ProductID matches and store it in the TotalSales variable
+    SELECT SUM(TotalPrice) INTO TotalSales FROM OrderDetails WHERE OrderDetails.ProductID = ProductID;
+    
+    -- Return the total sales amount
+    RETURN TotalSales;
+END;
+//
+
+-- Drop the existing procedure AddNewProduct if it exists
+-- This ensures we can create a new procedure without conflict
+DROP PROCEDURE IF EXISTS AddNewProduct;
+//
+
+-- Create a procedure to add a new product to the database
+-- The procedure takes ProductName, Category, and Price as input parameters
+CREATE PROCEDURE AddNewProduct (IN ProductName VARCHAR(100), IN Category VARCHAR(50), IN Price DECIMAL(10, 2))
+BEGIN
+    -- Insert a new product into the Product table with the specified ProductName, Category, and Price
+    INSERT INTO Product (ProductName, Category, Price) VALUES (ProductName, Category, Price);
+END;
+//
+
+-- Drop the existing procedure UpdateInventory if it exists
+-- This ensures we can create a new procedure without conflict
+DROP PROCEDURE IF EXISTS UpdateInventory;
+//
+
+-- Create a procedure to update the quantity in stock for a given product
+-- The procedure takes ProductID and NewQuantity as input parameters
+CREATE PROCEDURE UpdateInventory (IN ProductID INT, IN NewQuantity INT)
+BEGIN
+    -- Update the QuantityInStock in the Inventory table for the specified ProductID with the new quantity
+    UPDATE Inventory SET QuantityInStock = NewQuantity WHERE Inventory.ProductID = ProductID;
+END;
+//
+
+-- Change the delimiter back to the default semicolon (;) to finish the script
+-- This restores the default behavior for statement termination
+DELIMITER ;
+
+-- Retrieve the total number of orders placed by the customer with ID 1
+SELECT GetCustomerOrders(1) AS TotalOrdersForCustomer1;
+
+-- Retrieve the total sales amount for the product with ID 1
+SELECT GetTotalSales(1) AS TotalSalesForProduct1;
+
+-- Call the stored procedure to add a new product with the specified name, category, and price
+CALL AddNewProduct('Product C', 'Category 3', 29.99);
+
+-- Call the stored procedure to update the inventory for the product with ID 1 to a new quantity of 150
+CALL UpdateInventory(1, 150);
