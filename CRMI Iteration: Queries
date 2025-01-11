@@ -1,0 +1,78 @@
+/* Query users by role */
+
+/* Select all details for users with the role 'Administrator' */
+SELECT u.UserID, u.FirstName, u.LastName, u.Email, u.Phone, u.DateOfBirth, u.Address
+FROM `User` u
+JOIN UserRole ur ON u.UserID = ur.UserID  -- Join User table with UserRole table on UserID
+JOIN Role r ON ur.RoleID = r.RoleID  -- Join UserRole table with Role table on RoleID
+WHERE r.RoleName = 'Administrator';  -- Filter for role 'Administrator'
+
+/* Select all details for users with the role 'Trainer' */
+SELECT u.UserID, u.FirstName, u.LastName, u.Email, u.Phone, u.DateOfBirth, u.Address
+FROM `User` u
+JOIN UserRole ur ON u.UserID = ur.UserID  -- Join User table with UserRole table on UserID
+JOIN Role r ON ur.RoleID = r.RoleID  -- Join UserRole table with Role table on RoleID
+WHERE r.RoleName = 'Trainer';  -- Filter for role 'Trainer'
+
+/* Select all details for users with the role 'Marketing' */
+SELECT u.UserID, u.FirstName, u.LastName, u.Email, u.Phone, u.DateOfBirth, u.Address
+FROM `User` u
+JOIN UserRole ur ON u.UserID = ur.UserID  -- Join User table with UserRole table on UserID
+JOIN Role r ON ur.RoleID = r.RoleID  -- Join UserRole table with Role table on RoleID
+WHERE r.RoleName = 'Marketing';  -- Filter for role 'Marketing'
+
+/* Select all details for users with the role 'Sales' */
+SELECT u.UserID, u.FirstName, u.LastName, u.Email, u.Phone, u.DateOfBirth, u.Address
+FROM `User` u
+JOIN UserRole ur ON u.UserID = ur.UserID  -- Join User table with UserRole table on UserID
+JOIN Role r ON ur.RoleID = r.RoleID  -- Join UserRole table with Role table on RoleID
+WHERE r.RoleName = 'Sales';  -- Filter for role 'Sales'
+
+/* Aggregate query to count users by role */
+/* Count the number of users for each role */
+SELECT r.RoleName, COUNT(*) as NumberOfUsers
+FROM UserRole ur
+JOIN Role r ON ur.RoleID = r.RoleID  -- Join UserRole table with Role table on RoleID
+GROUP BY r.RoleName;  -- Group by role name to count users per role
+
+/* Aggregate query to count total customers */
+/* Count the total number of customers */
+SELECT COUNT(*) as TotalCustomers FROM Customer;
+
+/* Cartesian product query */
+/* Select all combinations of customers and products */
+SELECT *
+FROM Customer, Product;  -- Cartesian product of Customer and Product tables
+
+/* Join query (equivalent to the cartesian product query) */
+/* Select specific details of customers and products */
+SELECT c.CustomerID, c.FirstName, c.LastName, c.Email, c.Phone, 
+       p.ProductID, p.ProductName, p.Category, p.Price
+FROM Customer c
+JOIN Product p;  -- Join Customer table with Product table
+
+/* Subquery and predicate query */
+
+/* Using subquery */
+/* Select orders where the customer's last name starts with 'A' */
+SELECT *
+FROM `Order`
+WHERE CustomerID IN (SELECT CustomerID FROM Customer WHERE LastName LIKE 'A%');  -- Subquery to filter customers by last name
+
+/* Using predicate */
+/* Select orders where the customer's last name is between 'A' and 'M' */
+SELECT *
+FROM `Order`
+WHERE CustomerID IN (SELECT CustomerID FROM Customer WHERE LastName BETWEEN 'A' AND 'M');  -- Subquery with predicate to filter customers by last name
+
+/* List customers where the last name starts with A-M, ordered by last name */
+/* Select and order customers with last name between 'A' and 'M' */
+SELECT * FROM Customer
+WHERE LastName BETWEEN 'A' AND 'M'
+ORDER BY LastName;  -- Order results by last name
+
+/* List customers where the last name starts with N-Z, ordered by last name */
+/* Select and order customers with last name between 'N' and 'Z' */
+SELECT * FROM Customer
+WHERE LastName BETWEEN 'N' AND 'Z'
+ORDER BY LastName;  -- Order results by last name
