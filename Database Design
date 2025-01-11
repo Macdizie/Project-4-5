@@ -1,0 +1,61 @@
+-- Drop the existing database if it exists
+DROP DATABASE IF EXISTS MusicCollection;
+
+-- Create the database
+CREATE DATABASE MusicCollection;
+
+-- Use the created database
+USE MusicCollection;
+
+-- Create the Artists table
+CREATE TABLE Artists (
+    ArtistID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    Country VARCHAR(255)
+);
+
+-- Super Keys: {ArtistID}, {ArtistID, Name}, {ArtistID, Country}, {Name, Country}
+-- Candidate Keys: {ArtistID}, {Name, Country}
+-- Primary Key: {ArtistID}
+-- Justification: ArtistID is unique for each artist, ensuring each entry is identifiable.
+
+-- Create the Albums table
+CREATE TABLE Albums (
+    AlbumID INT AUTO_INCREMENT PRIMARY KEY,
+    Title VARCHAR(255) NOT NULL,
+    ArtistID INT NOT NULL,
+    ReleaseYear YEAR,
+    FOREIGN KEY (ArtistID) REFERENCES Artists(ArtistID)
+);
+
+-- Super Keys: {AlbumID}, {AlbumID, Title}, {AlbumID, ArtistID}, {AlbumID, ReleaseYear}, {Title, ArtistID}
+-- Candidate Keys: {AlbumID}, {Title, ArtistID}
+-- Primary Key: {AlbumID}
+-- Justification: AlbumID uniquely identifies each album, ensuring there are no duplicates.
+
+-- Create the Songs table
+CREATE TABLE Songs (
+    SongID INT AUTO_INCREMENT PRIMARY KEY,
+    Title VARCHAR(255) NOT NULL,
+    Duration TIME NOT NULL,
+    AlbumID INT NOT NULL,
+    TrackNumber INT NOT NULL,
+    FOREIGN KEY (AlbumID) REFERENCES Albums(AlbumID)
+);
+
+-- Super Keys: {SongID}, {SongID, Title}, {SongID, Duration}, {SongID, AlbumID}, {SongID, TrackNumber}, {AlbumID, TrackNumber}
+-- Candidate Keys: {SongID}, {AlbumID, TrackNumber}
+-- Primary Key: {SongID}
+-- Justification: SongID is unique for each song, ensuring each song entry is identifiable.
+
+-- Insert sample data into Artists
+INSERT INTO Artists (Name, Country) VALUES ('Queen', 'UK');
+INSERT INTO Artists (Name, Country) VALUES ('The Eagles', 'USA');
+
+-- Insert sample data into Albums
+INSERT INTO Albums (Title, ArtistID, ReleaseYear) VALUES ('A Night at the Opera', 1, 1975);
+INSERT INTO Albums (Title, ArtistID, ReleaseYear) VALUES ('Hotel California', 2, 1976);
+
+-- Insert sample data into Songs
+INSERT INTO Songs (Title, Duration, AlbumID, TrackNumber) VALUES ('Bohemian Rhapsody', '05:55', 1, 1);
+INSERT INTO Songs (Title, Duration, AlbumID, TrackNumber) VALUES ('Hotel California', '06:30', 2, 1);
