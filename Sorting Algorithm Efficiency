@@ -1,0 +1,63 @@
+import random
+import time
+
+# Function to generate a list of random numbers
+def generate_random_list(size):
+    return [random.randint(1, 10000) for _ in range(size)]
+
+# Bubble Sort algorithm
+def bubble_sort(arr):
+    n = len(arr)
+    swapped = True
+    while swapped:
+        swapped = False
+        for i in range(1, n):
+            if arr[i - 1] > arr[i]:
+                # Swap two elements if they are out of order
+                arr[i - 1], arr[i] = arr[i], arr[i - 1]
+                swapped = True
+
+# Quick Sort algorithm
+def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = random.choice(arr)
+    # Divide the list into three sublists: less, equal, and greater
+    less = [x for x in arr if x < pivot]
+    equal = [x for x in arr if x == pivot]
+    greater = [x for x in arr if x > pivot]
+    # Recursively sort the three sublists and combine them
+    return quick_sort(less) + equal + quick_sort(greater)
+
+def measure_sorting_time(sort_function, arr):
+    start_time = time.time()
+    # Measure the time taken to sort the list using the provided sorting function
+    sort_function(arr)
+    end_time = time.time()
+    return end_time - start_time
+
+if __name__ == '__main__':
+    list_size = 10000
+    # Generate a random list of the specified size
+    random_list = generate_random_list(list_size)
+
+    # Create copies of the random list for testing both sorting algorithms
+    bubble_list = random_list.copy()
+    quick_list = random_list.copy()
+
+    # Measure the time taken for Bubble Sort
+    bubble_duration = measure_sorting_time(bubble_sort, bubble_list)
+
+    # Measure the time taken for Quick Sort
+    quick_duration = measure_sorting_time(quick_sort, quick_list)
+
+    # Print the results
+    print(f"List size: {list_size}")
+    print(f"Bubble Sort took {bubble_duration:.6f} seconds")
+    print(f"Quick Sort took {quick_duration:.6f} seconds")
+
+    # Compare the efficiency of Bubble Sort and Quick Sort
+    if bubble_duration < quick_duration:
+        print("Bubble Sort is more efficient.")
+    else:
+        print("Quick Sort is more efficient.")
