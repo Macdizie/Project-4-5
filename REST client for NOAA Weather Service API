@@ -1,0 +1,83 @@
+import requests # Import requests to handle web requests
+def get_grid_info(latitude, longitude):
+"""
+Get grid info (office, gridX, gridY) for a location.
+Parameters:
+latitude (float): The latitude of the place.
+longitude (float): The longitude of the place.
+Returns:
+tuple: Contains office, gridX, gridY.
+"""
+# Create the URL with the given latitude and longitude
+url = f'https://api.weather.gov/points/{latitude},{longitude}'
+# Make a request to the API
+response = requests.get(url)
+# Check if the request worked
+if response.ok:
+# Get the JSON data from the response
+data = response.json()
+# Get office, gridX, and gridY from the JSON data
+office = data['properties']['gridId']
+gridX = data['properties']['gridX']
+gridY = data['properties']['gridY']
+# Return office, gridX, and gridY as a tuple
+return office, gridX, gridY
+else:
+# Show an error if something went wrong
+raise Exception(f"Couldn't get grid info. Status code:
+{response.status_code}")
+def get_forecast(office, gridX, gridY):
+"""
+Get the weather forecast for a location.
+Parameters:
+office (str): Office code for the area.
+gridX (int): X coordinate on the grid.
+gridY (int): Y coordinate on the grid.
+Returns:
+str: Forecast details.
+"""
+# Create the URL for the forecast data
+url = f'https://api.weather.gov/gridpoints/{office}/{gridX},{gridY}/forecast'
+# Make a request to the API
+response = requests.get(url)
+# Check if the request worked
+if response.ok:
+# Get the forecast data from JSON
+forecast_data = response.json()['properties']['periods'][0]# Get temperature trend if it exists, otherwise 'No trend'
+temperature_trend = forecast_data.get('temperatureTrend', 'No trend')
+# Create a forecast description
+forecast = f"{forecast_data['temperature']}°F {temperature_trend} -
+{forecast_data['shortForecast']}"
+# Return the forecast
+return forecast
+else:
+# Show an error if something went wrong
+raise Exception(f"Couldn't get forecast. Status code:
+{response.status_code}")
+def main():
+"""
+Main function that asks for latitude and longitude,
+gets the forecast, and shows it to the user.
+"""
+# Ask for latitude and longitude
+print("Enter the latitude and longitude for the location you want the forecast
+for.")
+try:
+# Get latitude and longitude from user input
+latitude = float(input("Latitude: "))
+longitude = float(input("Longitude: "))
+# Get office, gridX, and gridY for the location
+office, gridX, gridY = get_grid_info(latitude, longitude)
+# Get the forecast using office, gridX, and gridY
+forecast = get_forecast(office, gridX, gridY)
+# Print the forecast for the user
+print(f"The forecast for ({latitude}, {longitude}) is: {forecast}")
+except ValueError:
+# Handle errors with non-numeric input
+print("Error: Enter valid numbers for latitude and longitude.")
+except Exception as e:
+# Handle other errors (like network or API errors)
+print(f"Error: {e}")
+# Run the main function if this file is executed directly
+if __name__ == "__main__":
+main()
