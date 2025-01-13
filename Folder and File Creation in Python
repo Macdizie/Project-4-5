@@ -1,0 +1,36 @@
+import os
+import random
+import shutil
+# Author: Mark Torres
+# OS: Windows 11
+# This Python program creates a folder, generates 100 random numbers from 0 to 1000
+# and saves them into a file called "numbers100.txt" inside the created folder.
+def create_folder_and_save_file():
+# Ask the user for a folder name
+folder_name = input("Please enter a name for the new folder: ")
+# Check if the folder already exists
+if os.path.exists(folder_name):
+# If it exists, delete the folder and its contents
+shutil.rmtree(folder_name)
+print(f"Existing folder '{folder_name}' has been removed.")
+# Create a new folder
+os.makedirs(folder_name)
+print(f"New folder '{folder_name}' has been created.")
+# Create a list to store 100 random numbers
+random_numbers = []
+for _ in range(100):
+# Generate a random number between 0 and 1000
+number = random.randint(0, 1000)
+# Convert the number to a string and add it to the list
+random_numbers.append(str(number))
+# Define the path for the file to save the numbers
+file_path = os.path.join(folder_name, "numbers100.txt")
+# Open the file in write mode and save the numbers
+with open(file_path, "w") as file:
+# Join the numbers with a newline and write to the file
+file.write("\n".join(random_numbers))
+print(f"A file containing 100 random numbers has been successfully saved in
+'{file_path}'.")
+# Call the function to execute the code
+if __name__ == "__main__":
+create_folder_and_save_file()
