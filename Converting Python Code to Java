@@ -1,0 +1,39 @@
+import java.util.Scanner; // Import Scanner to get input
+public class Factorial {
+// Method to calculate factorial
+public static void calculate() {
+// Create Scanner for user input
+Scanner scanner = new Scanner(System.in);
+int n;
+// Ask user for a number
+System.out.print("Please enter a positive integer to continue: ");
+n = scanner.nextInt(); // Get number from user
+// If number is negative (example -2), ask again
+while (n < 0) {
+System.out.print("I apologize, only positive numbers can entered.
+Please try again: ");
+n = scanner.nextInt();
+}
+// Check if number is zero
+if (n == 0) {
+// Factorial of 0 is 1
+System.out.println("The factorial of 0 is 1");
+} else {
+long factorial = 1; // Initialize factorial variable using long to
+handle larger numbers
+// Calculate factorial using a loop
+for (int i = 1; i <= n; i++) {
+factorial = factorial * i; // Multiply factorial by i
+}
+// Print the result
+System.out.println("The factorial of " + n + " is " + factorial);
+}
+// Close Scanner
+scanner.close();
+}
+// Main method to run the program
+public static void main(String[] args) {
+// Call calculate method
+calculate();
+}
+}
