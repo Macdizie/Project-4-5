@@ -1,0 +1,260 @@
+import 'dart:math'; // Importing math utilities for random number generation
+
+import 'package:flutter/material.dart'; // Importing Flutter widgets and material design components
+import 'package:flutter_tts/flutter_tts.dart'; // Importing Text-to-Speech package for speaking words aloud
+
+void main() {
+  runApp(const SpellingPracticeApp()); // Entry point of the app
+}
+
+/// The main application widget
+/// Responsible for setting up the theme and routing to the home page
+class SpellingPracticeApp extends StatelessWidget {
+  const SpellingPracticeApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Configures the MaterialApp with a title, theme, and home page
+    return MaterialApp(
+      title: 'Spelling Practice', // Title of the app
+      theme: ThemeData(primarySwatch: Colors.blue), // Theme settings
+      home: const SpellingHomePage(), // Navigates to the home page
+    );
+  }
+}
+
+/// Home page widget of the spelling practice app
+/// This page includes functionality to add words and start a spelling practice session
+class SpellingHomePage extends StatefulWidget {
+  const SpellingHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<SpellingHomePage> createState() => _SpellingHomePageState(); // Creates a mutable state for the home page
+}
+
+class _SpellingHomePageState extends State<SpellingHomePage> {
+  final TextEditingController _wordsController = TextEditingController(); // Controller for the word input text field
+  final FlutterTts _tts = FlutterTts(); // Instance of the Text-to-Speech engine
+  final List<String> _words = []; // List to store words added by the user
+  final List<String> _correctWords = []; // Tracks words correctly spelled by the user
+  String? _currentWord; // The current word to be spelled by the user
+  String _userInput = ''; // User's input for the current word
+  int _score = 0; // Score tracker for the number of correct answers
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeTts(); // Initializes the TTS engine when the widget is first created
+  }
+
+  /// Initializes Text-to-Speech (TTS) engine settings
+  void _initializeTts() async {
+    try {
+      await _tts.setLanguage("en-US"); // Sets the language to English (US)
+      await _tts.setSpeechRate(0.5); // Adjusts the speaking rate
+      await _tts.setVolume(1.0); // Sets the volume to maximum
+      await _tts.setPitch(1.0); // Sets the pitch level
+    } catch (e) {
+      debugPrint("Error initializing TTS: $e"); // Debug message for TTS initialization errors
+    }
+  }
+
+  /// Saves a word to the list and speaks it aloud using TTS
+  Future<void> _saveWord() async {
+    String word = _wordsController.text.trim(); // Gets and trims the input word
+    if (word.isNotEmpty) {
+      if (!_words.contains(word)) {
+        setState(() {
+          _words.add(word); // Adds the word to the list
+          _wordsController.clear(); // Clears the input field
+        });
+        try {
+          await _speakWord(word); // Speaks the word using TTS
+        } catch (e) {
+          debugPrint("Error speaking word: $e"); // Debug message for TTS errors
+        }
+      }
+    }
+  }
+
+  /// Speaks a given word using the TTS engine
+  Future<void> _speakWord(String word) async {
+    await _tts.speak(word); // Calls the TTS engine to speak the word
+  }
+
+  /// Starts a practice session by selecting a random word from the list
+  void _startPractice() async {
+    // Filters words that have not been correctly spelled yet
+    final remainingWords = _words.where((word) => !_correctWords.contains(word)).toList();
+
+    if (remainingWords.isEmpty) {
+      _askRestartOrStartOver(); // Prompts the user to restart or reset if no words are left
+      return;
+    }
+
+    setState(() {
+      // Picks a random word and resets user input
+      _currentWord = remainingWords[Random().nextInt(remainingWords.length)];
+      _userInput = '';
+    });
+
+    try {
+      if (_currentWord != null) {
+        await _speakWord(_currentWord!); // Speaks the selected word
+      }
+    } catch (e) {
+      debugPrint("Error during practice: $e"); // Debug message for practice errors
+    }
+  }
+
+  /// Checks the user's answer and updates the score
+  void _checkAnswer() {
+    if (_currentWord == null) return; // Returns if no word is selected
+
+    // Ensures comparison respects the exact case
+    if (_userInput.trim() == _currentWord) {
+      // Correct answer
+      setState(() {
+        _score++; // Increases the score
+        if (!_correctWords.contains(_currentWord!)) {
+          _correctWords.add(_currentWord!); // Adds the word to correctly spelled list
+        }
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Correct! 🎉')), // Shows success message
+      );
+      _startPractice(); // Proceeds to the next word
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Incorrect! Try Again. 😅')), // Shows retry message
+      );
+    }
+  }
+
+  /// Prompts the user to restart or reset the practice session
+  void _askRestartOrStartOver() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('All Words Spelled Correctly!'), // Dialog title
+        content: const Text('Would you like to restart or reset?'), // Dialog content
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Closes the dialog
+              setState(() {
+                _score = 0; // Resets the score
+                _correctWords.clear(); // Clears correctly spelled words
+              });
+              _startPractice(); // Restarts the practice session
+            },
+            child: const Text('Restart'), // Restart button
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Closes the dialog
+              setState(() {
+                _score = 0; // Resets the score
+                _correctWords.clear(); // Clears correctly spelled words
+                _words.clear(); // Clears all words
+                _currentWord = null; // Resets the current word
+              });
+            },
+            child: const Text('Reset'), // Reset button
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _wordsController.dispose(); // Disposes the text controller
+    _tts.stop(); // Stops any ongoing TTS processes
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Builds the UI for the home page
+    return Scaffold(
+      appBar: AppBar(title: const Text('Spelling Practice')), // App bar with title
+      body: Padding(
+        padding: const EdgeInsets.all(16.0), // Padding for the main content
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start, // Aligns content to the start
+          children: [
+            TextField(
+              controller: _wordsController, // Text field for entering words
+              decoration: const InputDecoration(
+                labelText: 'Enter a spelling word', // Label for the text field
+                border: OutlineInputBorder(), // Border style
+              ),
+            ),
+            const SizedBox(height: 10), // Spacing between widgets
+            ElevatedButton(
+              onPressed: _saveWord, // Saves the word on button press
+              child: const Text('Save Word'), // Button text
+            ),
+            const SizedBox(height: 20),
+            if (_words.isNotEmpty)
+              ElevatedButton(
+                onPressed: _startPractice, // Starts the practice session
+                child: const Text('Start Practice'), // Button text
+              ),
+            const SizedBox(height: 20),
+            if (_currentWord != null)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Spell this word:', // Prompt for spelling the word
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    onChanged: (value) => _userInput = value, // Captures user input
+                    decoration: const InputDecoration(
+                      labelText: 'Your Answer', // Label for the input field
+                      border: OutlineInputBorder(), // Border style
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _checkAnswer, // Checks the user's answer
+                    child: const Text('Check Answer'), // Button text
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_currentWord != null) {
+                        _speakWord(_currentWord!); // Repeats the current word
+                      }
+                    },
+                    child: const Text('Repeat the Word'), // Button text
+                  ),
+                ],
+              ),
+            const SizedBox(height: 20),
+            Text(
+              'Score: $_score', // Displays the user's current score
+              style: const TextStyle(fontSize: 18),
+            ),
+            if (_correctWords.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Correctly Spelled Words:', // Header for correctly spelled words
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  ..._correctWords.map((word) => Text(word)).toList(), // Displays the list of correctly spelled words
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
