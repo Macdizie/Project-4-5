@@ -1,0 +1,52 @@
+package main
+
+import (
+	"fmt"
+)
+
+// The Tribonacci function returns the first n numbers in the Tribonacci sequence.
+// Unlike Fibonacci, where the last two numbers are summed, Tribonacci sums the last three numbers.
+// The input n must be a positive integer because:
+// 1. Negative numbers do not make sense in the context of the sequence as it's based on summing previous positive terms.
+// 2. Floating-point numbers are not valid inputs because the sequence expects whole numbers (integers) only.
+// 3. Strings or any other data type are invalid because they cannot be used in mathematical operations like addition.
+
+func tribonacci(n int) []int {
+	// If n is 0 or less, return an empty list.
+	// Negative values are not valid for n since Tribonacci is only defined for non-negative integers.
+	if n <= 0 {
+		return []int{}
+	}
+
+	// If n is 1, return a list with just one number: 0.
+	if n == 1 {
+		return []int{0}
+	}
+
+	// If n is 2, return a list with two numbers: 0 and 0.
+	if n == 2 {
+		return []int{0, 0}
+	}
+
+	// For n >= 3, we start with [0, 0, 1].
+	// This initialization ensures the sequence starts with two zeros followed by one.
+	result := []int{0, 0, 1}
+
+	// We use a loop to add the rest of the numbers in the sequence.
+	// The next value is always the sum of the last 3 numbers in the sequence.
+	for i := 3; i < n; i++ {
+		// The next value is the sum of the last 3 numbers.
+		newValue := result[i-1] + result[i-2] + result[i-3]
+
+		// Add the new value to the list.
+		result = append(result, newValue)
+	}
+
+	// Return the entire list.
+	return result
+}
+
+func main() {
+	// Print the first 20 numbers in the Tribonacci sequence.
+	fmt.Println(tribonacci(20))
+}
