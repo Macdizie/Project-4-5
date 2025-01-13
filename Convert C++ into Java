@@ -1,0 +1,56 @@
+// Torres, Mark CSC 6303; Project 2 in VS Code using Java
+// Import the Scanner class from the java.util package
+import java.util.Scanner;
+public class Prime {
+// This method checks if a given number 'n' is a prime number
+public static boolean isPrime(int n) {
+// A prime number must be greater than 1
+if (n <= 1) {
+// If the number is 1 or less, it's not a prime number
+return false;
+}
+// 2 and 3 are prime numbers, so return true for them
+if (n == 2 || n == 3) {
+return true;
+}
+// If the number is divisible by 2 or 3, it's not a prime number
+if (n % 2 == 0 || n % 3 == 0) {
+return false;
+}
+// This loop checks for factors from 5 up to the square root of 'n'
+for (int i = 5; i * i <= n; i += 6) {
+if (n % i == 0 || n % (i + 2) == 0) {
+return false;
+}
+}
+// If no divisors are found, 'n' is a prime number
+return true;
+}
+// The main method is the entry point of the program
+public static void main(String[] args) {
+// Create a Scanner object to read input from the user
+Scanner scanner = new Scanner(System.in);
+int number; // This variable will store the number entered by the user
+// A do-while loop that repeatedly asks the user for a number
+do {
+// Prompt the user to enter a positive number
+System.out.print("Enter a positive number (0 or negative to exit): ");
+// Read the number entered by the user and store it in 'number'
+number = scanner.nextInt();
+// Check if the number is 0 or negative
+if (number <= 0) {
+// If the number is 0 or negative, break out of the loop
+break;
+}
+// Call the 'isPrime' method to check if the entered number is prime
+if (isPrime(number)) {
+// If the method returns true, the number is prime
+System.out.println(number + " is a prime number.");} else {
+// If the method returns false, the number is not prime
+System.out.println(number + " is not a prime number.");
+}
+} while (true); // The loop continues until we break out
+// Close the Scanner object to free up resources
+scanner.close();
+}
+}
