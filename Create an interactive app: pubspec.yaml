@@ -1,0 +1,33 @@
+name: flutter_application_1
+description: >
+  The Spelling Practice App, built with Flutter, helps users improve spelling 
+  through interactive practice sessions. Users can create custom word lists and 
+  use a text-to-speech feature to learn proper pronunciation. The app randomly 
+  selects words for users to spell, provides immediate feedback, tracks progress 
+  with scores, allows review of correct words, and offers session restart options. 
+  Its intuitive interface supports repeating challenging words and retrying 
+  opportunities for both children’s education and adult vocabulary enhancement. 
+  Utilizing Dart programming principles along with Material Design elements for 
+  a modern look, it leverages the Flutter TTS library for strong speech support.
+
+publish_to: 'none'
+
+version: 0.0.1+1
+
+environment:
+  sdk: ">=3.1.1 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_tts: ^3.6.2
+  english_words: ^4.0.0
+  provider: ^6.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.1
+
+flutter:
+  uses-material-design: true
