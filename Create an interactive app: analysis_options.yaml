@@ -1,0 +1,11 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    avoid_print: false # Allow print statements for debugging
+    prefer_const_constructors_in_immutables: false # Keep flexibility for learning
+    prefer_const_constructors: true # Enforce const constructors for performance
+    prefer_const_literals_to_create_immutables: true # Enforce const literals
+    prefer_final_fields: true # Encourage immutability
+    unnecessary_breaks: true
+    use_key_in_widget_constructors: true # Encourage proper widget reconstruction
