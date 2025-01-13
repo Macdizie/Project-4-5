@@ -1,0 +1,59 @@
+import os # Module to interact with the operating system
+import platform # Module to get information about the current OS
+# Author: Mark Torres
+# OS Tested: Windows 11
+def convert_path_to_os_format(input_path):
+"""
+This function adjusts the provided file path to match the format of the current
+operating system.
+On Windows, it replaces forward slashes ("/") with backslashes ("\\") and
+manages drive letters and spaces.
+For Unix-based systems (such as Linux or macOS), it converts backslashes ("\\")
+to forward slashes ("/") and handles spaces by escaping them.
+"""
+# Get the name of the current operating system (e.g., "Windows", "Linux",
+"Darwin" for macOS)
+current_os = platform.system()
+# Check if the OS is Windows
+if current_os == "Windows":
+# If the OS is Windows, convert any forward slashes to backslashes
+converted_path = input_path.replace("/", "\\")
+# Handle drive letter conversion if path starts with a backslash (assume
+"C:")
+if converted_path.startswith("\\"):
+converted_path = "C:" + converted_path
+# Escape spaces by surrounding the path with quotes (if necessary)
+if " " in converted_path:
+converted_path = f'"{converted_path}"'
+else:
+# If the OS is not Windows (likely Linux or macOS), convert any backslashes
+to forward slashes
+converted_path = input_path.replace("\\", "/")
+# Escape spaces using a backslash (if necessary)
+if " " in converted_path:
+converted_path = converted_path.replace(" ", "\\ ")
+# Return the converted path to the caller
+return converted_path
+def main():
+# Determine the current operating system and display it to the user
+current_os = platform.system()
+print(f"Detected Operating System: {current_os}") # This will print the
+detected OS like "Windows" or "Linux"
+# Ask the user to input a file name with its path
+user_input_path = input("Please enter a file name with path: ")
+# Call the function to convert the path based on the detected OS
+converted_path = convert_path_to_os_format(user_input_path)
+# Display the converted path back to the user
+print(f"Converted path for {current_os}: {converted_path}")# Check if the converted path exists in the file system (remove quotes if
+present)
+path_to_check = converted_path.strip('"') # Remove any surrounding quotes for
+file existence check
+if os.path.exists(path_to_check):
+# If the path exists, let the user know
+print(f"The path '{converted_path}' exists.")
+else:
+# If the path does not exist, inform the user
+print(f"The path '{converted_path}' does not exist.")
+# If this script is being run directly, call the main function to start the program
+if __name__ == "__main__":
+main()
