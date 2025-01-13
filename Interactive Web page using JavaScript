@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    The <meta> tag below ensures proper character encoding for the webpage, which helps display text correctly.
+    The <meta name="viewport"> tag ensures the webpage scales correctly on mobile devices.
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- The title of the webpage, which will appear on the browser tab -->
+  <title>Prime Number Checker</title>
+  
+  <!-- JavaScript code to perform prime number checking -->
+  <script>
+    /*
+      Function: isPrime
+      Purpose: This function checks whether a given number is a prime number.
+               Prime numbers are numbers greater than 1 that are only divisible by 1 and themselves.
+      Parameters: 
+        - n: The number to be checked.
+      Returns: 
+        - true if the number is prime.
+        - false if the number is not prime.
+    */
+    function isPrime(n) {
+      // Numbers less than or equal to 1 are not prime
+      if (n <= 1) return false;
+
+      // Numbers 2 and 3 are prime
+      if (n <= 3) return true;
+
+      // Numbers divisible by 2 or 3 are not prime
+      if (n % 2 === 0 || n % 3 === 0) return false;
+
+      // Check divisibility for numbers greater than 3
+      // The loop checks divisibility from 5 onwards, skipping multiples of 2 and 3
+      // i * i <= n ensures we only check up to the square root of n for efficiency
+      for (let i = 5; i * i <= n; i += 6) {
+        if (n % i === 0 || n % (i + 2) === 0) return false;
+      }
+      
+      // If no divisors were found, the number is prime
+      return true;
+    }
+
+    /*
+      Function: checkPrime
+      Purpose: This function is triggered when the user clicks the "Check Prime" button.
+               It reads the number input by the user, checks if it is prime, and displays the result.
+    */
+    function checkPrime() {
+      // Read the value entered by the user in the input field and convert it to an integer
+      const num = parseInt(document.getElementById("inputNumber").value);
+
+      // Get the paragraph element where we will display the result
+      const output = document.getElementById("outputResult");
+
+      // Check if the number is within the valid range (2 to 9999)
+      if (isNaN(num) || num < 2 || num > 9999) {
+        // If the number is not valid, display an error message in blue
+        output.innerHTML = "Please enter a number between 2 and 9999.";
+        output.style.color = "blue";
+      } else {
+        // If the number is valid, check if it is prime using the isPrime function
+        if (isPrime(num)) {
+          // If the number is prime, display a success message in green
+          output.innerHTML = num + " is a prime number.";
+          output.style.color = "green";
+        } else {
+          // If the number is not prime, display a message in red
+          output.innerHTML = num + " is not a prime number.";
+          output.style.color = "red";
+        }
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <!-- // Torres, Mark; CSC6303 HTML in VS Code -->
+
+  <!-- The main header of the webpage -->
+  <h1>Prime Number Checker</h1>
+
+  <!-- Paragraph to explain what the user should do -->
+  <p>Please enter a number between 2 and 9999 to check if it is a prime number:</p>
+
+  <!--
+    A label and input field where the user can enter a number.
+    The input field restricts input to numbers and specifies valid limits (min: 2, max: 9999).
+  -->
+  <label for="inputNumber">Please enter a number if you dare:</label>
+  <input type="number" id="inputNumber" min="2" max="9999"> <br> <br>
+
+  <!--
+    A button that the user can click to check if the entered number is prime.
+    The onclick attribute ensures the checkPrime function is called when the button is clicked.
+  -->
+  <button onclick="checkPrime()">Check Prime</button>
+
+  <!--
+    A paragraph element where the result (whether the number is prime or not) will be displayed.
+    Initially, this paragraph is empty. It will be updated by the JavaScript function.
+  -->
+  <p id="outputResult"></p>
+
+</body>
+</html>
